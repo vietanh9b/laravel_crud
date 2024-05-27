@@ -7,7 +7,7 @@
                 <div class="col-md-6">
                     <h4>All Posts</h4>
                 </div>
-                <div class="col-md-6 d-flex justify-content-end">
+                <div class="col-md-6 d-flex justify-content-end ">
                     <a href="{{route('posts.create')}}" class="btn btn-success">Create</a>
                     <a href="" class="btn btn-warning">Trash</a>
                 </div>
@@ -40,7 +40,7 @@
                     <td>{{date('Y-m-d',strtotime($post->created_at))}}</td>
                     <td>
                         <a class="btn btn-sm btn-primary" href="{{route('posts.edit',$post->id)}}">Edit</a>
-                        <a class="btn btn-sm btn-success " href="{{route('posts.show',$post->id)}}">Show</a>
+                        <a class="btn btn-sm btn-danger " href="">Edit</a>
                     </td>
                   </tr>
                   @endforeach

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use File;
 class PostController extends Controller
 {
     /**
@@ -55,7 +56,9 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post=Post::findOrFail($id);
+        return 1;
+        // return view('show',compact('post'));
     }
 
     /**
@@ -74,20 +77,25 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // $request->validate([
-        //     'image'=>['required','max:200','image'],
-        //     'title'=>['required','max:255'],
-        //     'category_id'=>['required','integer'],
-        //     'description'=>['required']
-        // ]);
-        $post=new Post();
-        $fileName=time().'_'.$request->image->getClientOriginalName();
-        $filePath=$request->image->storeAs('uploads',$fileName,'public');
+        $request->validate([
+            'title'=>['required','max:255'],
+            'category_id'=>['required','integer'],
+            'description'=>['required']
+        ]);
+        $post=Post::findOrFail($id);
+        if($request->hasFile('image')){
+            $request->validate([
+                'image'=>['required','max:200','image']
+            ]);
+            $fileName=time().'_'.$request->image->getClientOriginalName();
+            $filePath=$request->image->storeAs('uploads',$fileName,'public');
+            File::delete(public_path($post->image));
+            $post->image='storage/'.$filePath;
+        }
 
         $post->title=$request->title;
         $post->description=$request->description;
         $post->category_id=$request->category_id;
-        $post->image='storage/'.$filePath;
         $post->save();
         return redirect()->route('posts.index');
     }
